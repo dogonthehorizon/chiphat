@@ -16,4 +16,5 @@
   "Evaluates body with token temporarily set to a new token."
   [new-token & body]
   `(binding [*token* ~new-token]
-     ~@body))
+     (do
+       ~@body)))
