@@ -1,5 +1,5 @@
 (defproject chiphat "0.1.0-SNAPSHOT"
-  :description "Clojure API for accessing the HipChat v2 API."
+  :description "Clojure library for accessing the HipChat v2 API."
   :url "https://github.com/dogonthehorizon/chiphat"
   :license {:name "BSD"
             :url "http://opensource.org/licenses/BSD-3-Clause"}

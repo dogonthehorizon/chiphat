@@ -1,14 +1,9 @@
 # chiphat
 
-A Clojure library designed to ... well, that part is up to you.
-
-## Usage
-
-FIXME
+A Clojure library for accessing the HipChat v2 API.
 
 ## License
 
-Copyright © 2014 FIXME
+Copyright © 2014 Fernando Freire
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Distributed under the BSD-3 License.
