@@ -13,3 +13,9 @@
       (with-token (atom "baz")
         (is (= "baz" @*token*)))
       (is (= token-val @*token*)))))
+
+(deftest make-request-functionality
+  (testing "Given an endpoint and an api token, make-request should return a 200"
+    (set-token! (System/getenv "CHIPHAT_API_TOKEN"))
+    (let [{:keys [status]} @(make-request "emoticon")]
+      (is (= 200 status)))))

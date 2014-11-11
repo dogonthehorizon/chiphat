@@ -1,7 +1,9 @@
-(ns chiphat.core)
+
+(ns chiphat.core
+  (:require [org.httpkit.client :as http]))
 
 (def base-url
-  "https://api.hipchat.com/v2")
+  "https://api.hipchat.com/v2/")
 
 (def ^:dynamic *token*
   "Required auth token for interacting with HipChat."
@@ -18,3 +20,9 @@
   `(binding [*token* ~new-token]
      (do
        ~@body)))
+
+(defn make-request
+  "Given an endpoint, make a request to the HipChat API."
+  [endpoint & [options-map]]
+  (let [query-params (merge {:auth_token @*token*} options-map)]
+    (http/get (str base-url endpoint) {:query-params query-params})))
