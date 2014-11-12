@@ -19,3 +19,11 @@
     (set-token! (System/getenv "CHIPHAT_API_TOKEN"))
     (let [{:keys [status]} @(make-request "emoticon")]
       (is (= 200 status)))))
+
+(deftest parse-response-functionality
+  (testing "Given a valid api response, parse-response should convert the
+           response body to a map."
+    (set-token! (System/getenv "CHIPHAT_API_TOKEN"))
+    (let [response (make-request "emoticon/ohgodwhy")
+          resp-map (parse-response response)]
+      (is (map? resp-map)))))

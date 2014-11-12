@@ -1,6 +1,7 @@
-
 (ns chiphat.core
-  (:require [org.httpkit.client :as http]))
+  (:require [org.httpkit.client :as http]
+            [cheshire.core :as json]
+            [clojure.walk :refer [keywordize-keys]]))
 
 (def base-url
   "https://api.hipchat.com/v2/")
@@ -26,3 +27,11 @@
   [endpoint & [options-map]]
   (let [query-params (merge {:auth_token @*token*} options-map)]
     (http/get (str base-url endpoint) {:query-params query-params})))
+
+(defn parse-response
+  "Given a response from the HipChat API, parse the body and return a map."
+  [response]
+  (-> @response
+      :body
+      json/parse-string
+      keywordize-keys))
