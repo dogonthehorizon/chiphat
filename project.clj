@@ -4,5 +4,5 @@
   :license {:name "BSD"
             :url "http://opensource.org/licenses/BSD-3-Clause"}
   :dependencies [[org.clojure/clojure "1.7.0-alpha3"]
-                 [http-kit            "2.1.16"]
+                 [http-kit            "2.1.18"]
                  [cheshire            "5.3.1"]])
