@@ -23,10 +23,15 @@
        ~@body)))
 
 (defn make-request
-  "Given an endpoint, make a request to the HipChat API."
-  [endpoint & [options-map]]
-  (let [query-params (merge {:auth_token @*token*} options-map)]
-    (http/get (str base-url endpoint) {:query-params query-params})))
+  "Given a method, endpoint, and optional query and body maps, make a request
+  to the HipChat API."
+  [method endpoint & [{:keys [query body]}]]
+  (let [query-params (merge {:auth_token @*token*} query)
+        request-body (if (map? body) (json/generate-string body))]
+    (http/request {:url (str base-url endpoint)
+                   :method method
+                   :query-params query-params
+                   :body request-body})))
 
 (defn parse-response
   "Given a response from the HipChat API, parse the body and return a map."

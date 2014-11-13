@@ -16,14 +16,14 @@
 
 (deftest make-request-functionality
   (testing "Given an endpoint and an api token, make-request should return a 200"
-    (set-token! (System/getenv "CHIPHAT_API_TOKEN"))
-    (let [{:keys [status]} @(make-request "emoticon")]
-      (is (= 200 status)))))
+    (with-token (atom (System/getenv "CHIPHAT_API_TOKEN"))
+      (let [{:keys [status]} @(make-request :get "emoticon/fry")]
+        (is (= 200 status))))))
 
 (deftest parse-response-functionality
   (testing "Given a valid api response, parse-response should convert the
            response body to a map."
-    (set-token! (System/getenv "CHIPHAT_API_TOKEN"))
-    (let [response (make-request "emoticon/ohgodwhy")
-          resp-map (parse-response response)]
-      (is (map? resp-map)))))
+    (with-token (atom (System/getenv "CHIPHAT_API_TOKEN"))
+      (let [response (make-request :get "emoticon/ohgodwhy")
+            resp-map (parse-response response)]
+        (is (map? resp-map))))))
