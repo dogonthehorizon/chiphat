@@ -5,4 +5,5 @@
             :url "http://opensource.org/licenses/BSD-3-Clause"}
   :dependencies [[org.clojure/clojure "1.7.0-alpha3"]
                  [http-kit            "2.1.18"]
-                 [cheshire            "5.3.1"]])
+                 [cheshire            "5.3.1"]]
+  :profiles {:dev {:dependencies [[http-kit.fake "0.2.2"]]}})
