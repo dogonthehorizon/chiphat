@@ -19,7 +19,7 @@
 (defn delete
   "Delete an existing room."
   [name-or-id]
-  (make-request :delete (str base-endpoint "/" name-or-id)))
+  (make-request :delete (str base-endpoint "/" (url-encode name-or-id))))
 
 (defn get-one
   "Get room details."
