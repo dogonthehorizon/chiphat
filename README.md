@@ -16,6 +16,22 @@ Also on the list of planned features:
 
 ## Usage
 
+### Getting Started
+
+#### Leiningen
+
+Add the following to the `:dependencies` block of your `project.clj`
+
+[![Clojars Project](http://clojars.org/chiphat/latest-version.svg)](http://clojars.org/chiphat)
+
+Alternatively, you can require chiphat from the REPL like so:
+
+```clojure
+(require '[chiphat.core :as ch])
+(require '[chiphat.rooms :as room])
+;; etc.
+```
+
 ### Authentication
 
 HipChat uses a token based authentication approach for  their api. As such,
@@ -98,7 +114,7 @@ properly. This will be amended in future releases.
 
 ## Contributing
 
-This project is MIT licensed, so, contribute away!
+This project is BSD licensed, so, contribute away!
 
 Examples of contributions include:
 * Documentation additions, corrections, and improvements
