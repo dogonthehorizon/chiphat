@@ -31,7 +31,8 @@
     (http/request {:url (str base-url endpoint)
                    :method method
                    :query-params query-params
-                   :body request-body})))
+                   :body request-body
+                   :headers {"Content-Type" "application/json"}})))
 
 (defn parse-response
   "Given a response from the HipChat API, parse the body and return a map."
