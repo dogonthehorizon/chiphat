@@ -8,7 +8,7 @@
 
 (defn get-all
   "Get all available rooms."
-  [& [{:keys [start-index max-results include-archived] :as opts}]]
+  [& [{:keys [start-index max-results include-private include-archived] :as opts}]]
   (make-request :get base-endpoint {:query opts}))
 
 (defn get-one
