@@ -110,3 +110,18 @@
           message (get body "message")]
       (is (= 204 (:status response)))
       (is (= "hello world!" message)))))
+
+(deftest share-link-functionality
+  (with-fake-http [{:url "https://api.hipchat.com/v2/room/foobar/share/link"
+                    :method :post}
+                   {:status 204
+                    :body nil}]
+    (let [response @(room/share-link "foobar"
+                                     "https://www.google.com"
+                                     "sending a test link")
+          body (response-body response)
+          link (get body "link")
+          message (get body "message")]
+      (is (= 204 (:status response)))
+      (is (= "sending a test link" message))
+      (is (= "https://www.google.com" link)))))

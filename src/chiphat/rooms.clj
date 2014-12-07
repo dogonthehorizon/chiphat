@@ -49,3 +49,11 @@
                 (str base-endpoint "/" (url-encode name-or-id) "/reply")
                 {:body {:parentMessageId parent-message-id
                         :message message}}))
+
+(defn share-link
+  "Share a link with a given room."
+  [name-or-id link message]
+  (make-request :post
+                (str base-endpoint "/" (url-encode name-or-id) "/share/link")
+                {:body {:link link
+                        :message message}}))
