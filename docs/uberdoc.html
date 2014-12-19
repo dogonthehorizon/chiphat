@@ -2865,8 +2865,8 @@ net.brehaut.ClojureTools = (function (SH) {
     build_tree: build_tree
   };
 })(SyntaxHighlighter);
-</script><title>chiphat -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name"><a href="https://github.com/dogonthehorizon/chiphat">chiphat</a></h1><h2 class="project-version">0.2.0-SNAPSHOT</h2><br /><p>Clojure library for accessing the HipChat v2 API.</p>
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.7.0-alpha4</td></tr><tr><td class="dep-name">http-kit</td><td class="dotted"><hr /></td><td class="dep-version">2.1.19</td></tr><tr><td class="dep-name">cheshire</td><td class="dotted"><hr /></td><td class="dep-version">5.3.1</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#chiphat.core">chiphat.core</a></li><li><a href="#chiphat.emoticons">chiphat.emoticons</a></li><li><a href="#chiphat.rooms">chiphat.rooms</a></li><li><a href="#chiphat.util">chiphat.util</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#chiphat.core" name="chiphat.core"><h1 class="project-name">chiphat.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</script><title>chiphat -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name"><a href="https://github.com/dogonthehorizon/chiphat">chiphat</a></h1><h2 class="project-version">0.2.0</h2><br /><p>Clojure library for accessing the HipChat v2 API.</p>
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.7.0-alpha4</td></tr><tr><td class="dep-name">http-kit</td><td class="dotted"><hr /></td><td class="dep-version">2.1.19</td></tr><tr><td class="dep-name">cheshire</td><td class="dotted"><hr /></td><td class="dep-version">5.4.0</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#chiphat.core">chiphat.core</a></li><li><a href="#chiphat.emoticons">chiphat.emoticons</a></li><li><a href="#chiphat.rooms">chiphat.rooms</a></li><li><a href="#chiphat.users">chiphat.users</a></li><li><a href="#chiphat.util">chiphat.util</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#chiphat.core" name="chiphat.core"><h1 class="project-name">chiphat.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns chiphat.core
   (:require [org.httpkit.client :as http]
             [cheshire.core :as json]
@@ -2950,14 +2950,24 @@ net.brehaut.ClojureTools = (function (SH) {
   (make-request :post
                 (str base-endpoint &quot;/&quot; (url-encode name-or-id) &quot;/share/link&quot;)
                 {:body {:link link
-                        :message message}}))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#chiphat.util" name="chiphat.util"><h1 class="project-name">chiphat.util</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+                        :message message}}))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#chiphat.users" name="chiphat.users"><h1 class="project-name">chiphat.users</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns chiphat.users
+  (:require
+    [chiphat
+      [core :refer :all]
+      [util :refer [url-encode]]]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def base-endpoint
+  &quot;user&quot;)</pre></td></tr><tr><td class="docs"><p>Get a user's details.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn view
+ [id-or-email]
+ (make-request :get (str base-endpoint &quot;/&quot; (url-encode id-or-email))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#chiphat.util" name="chiphat.util"><h1 class="project-name">chiphat.util</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns chiphat.util
   (:import (java.net URLEncoder)))</pre></td></tr><tr><td class="docs"><p>Given a string, return a url encoded version of that string.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn url-encode
   ^{:author &quot;Chas Emerick&quot;
     :src &quot;https://github.com/cemerick/url/blob/master/src/cemerick/url.cljx&quot;}
   [s]
-  (some-&gt; s str (URLEncoder/encode &quot;UTF-8&quot;) (.replace &quot;+&quot; &quot;%20&quot;)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/gdeer81/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a><div id="floating-toc"><ul><li class="floating-toc-li" id="floating-toc_chiphat.core">chiphat.core</li><li class="floating-toc-li" id="floating-toc_chiphat.emoticons">chiphat.emoticons</li><li class="floating-toc-li" id="floating-toc_chiphat.rooms">chiphat.rooms</li><li class="floating-toc-li" id="floating-toc_chiphat.util">chiphat.util</li></ul></div></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
+  (some-&gt; s str (URLEncoder/encode &quot;UTF-8&quot;) (.replace &quot;+&quot; &quot;%20&quot;)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/gdeer81/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a><div id="floating-toc"><ul><li class="floating-toc-li" id="floating-toc_chiphat.core">chiphat.core</li><li class="floating-toc-li" id="floating-toc_chiphat.emoticons">chiphat.emoticons</li><li class="floating-toc-li" id="floating-toc_chiphat.rooms">chiphat.rooms</li><li class="floating-toc-li" id="floating-toc_chiphat.users">chiphat.users</li><li class="floating-toc-li" id="floating-toc_chiphat.util">chiphat.util</li></ul></div></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
 SyntaxHighlighter.all();
 
 // hackity hack
