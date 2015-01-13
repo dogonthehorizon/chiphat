@@ -37,7 +37,21 @@
 (defn parse-response
   "Given a response from the HipChat API, parse the body and return a map."
   [response]
-  (-> @response
-      :body
-      json/parse-string
-      keywordize-keys))
+  (let [resp @response]
+    (cond
+      ;; Unwrap the response from all the header hooplah.
+      (some? (:body resp))
+        (-> resp
+            :body
+            json/parse-string
+            keywordize-keys)
+      ;; Return an empty map for responses that are successful but have no
+      ;; body.
+      (some? (#{204} (:status @response)))
+        {}
+      ;; Keep this error map consistent with what is returned from the
+      ;; HipChat API.
+      (some?  (:error resp))
+        {:error  {:code 422 ; Closest matching HTTP we can return.
+                  :message  (str  (:error resp))
+                  :type  "ClientError"}})))
