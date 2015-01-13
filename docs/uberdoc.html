@@ -2865,8 +2865,8 @@ net.brehaut.ClojureTools = (function (SH) {
     build_tree: build_tree
   };
 })(SyntaxHighlighter);
-</script><title>chiphat -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name"><a href="https://github.com/dogonthehorizon/chiphat">chiphat</a></h1><h2 class="project-version">0.2.0</h2><br /><p>Clojure library for accessing the HipChat v2 API.</p>
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.7.0-alpha4</td></tr><tr><td class="dep-name">http-kit</td><td class="dotted"><hr /></td><td class="dep-version">2.1.19</td></tr><tr><td class="dep-name">cheshire</td><td class="dotted"><hr /></td><td class="dep-version">5.4.0</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#chiphat.core">chiphat.core</a></li><li><a href="#chiphat.emoticons">chiphat.emoticons</a></li><li><a href="#chiphat.rooms">chiphat.rooms</a></li><li><a href="#chiphat.users">chiphat.users</a></li><li><a href="#chiphat.util">chiphat.util</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#chiphat.core" name="chiphat.core"><h1 class="project-name">chiphat.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</script><title>chiphat -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name"><a href="https://github.com/dogonthehorizon/chiphat">chiphat</a></h1><h2 class="project-version">0.3.0</h2><br /><p>Clojure library for accessing the HipChat v2 API.</p>
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.7.0-alpha5</td></tr><tr><td class="dep-name">http-kit</td><td class="dotted"><hr /></td><td class="dep-version">2.1.19</td></tr><tr><td class="dep-name">cheshire</td><td class="dotted"><hr /></td><td class="dep-version">5.4.0</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#chiphat.core">chiphat.core</a></li><li><a href="#chiphat.emoticons">chiphat.emoticons</a></li><li><a href="#chiphat.rooms">chiphat.rooms</a></li><li><a href="#chiphat.users">chiphat.users</a></li><li><a href="#chiphat.util">chiphat.util</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#chiphat.core" name="chiphat.core"><h1 class="project-name">chiphat.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns chiphat.core
   (:require [org.httpkit.client :as http]
             [cheshire.core :as json]
@@ -2895,10 +2895,24 @@ net.brehaut.ClojureTools = (function (SH) {
                    :headers {&quot;Content-Type&quot; &quot;application/json&quot;}})))</pre></td></tr><tr><td class="docs"><p>Given a response from the HipChat API, parse the body and return a map.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn parse-response
   [response]
-  (-&gt; @response
-      :body
-      json/parse-string
-      keywordize-keys))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#chiphat.emoticons" name="chiphat.emoticons"><h1 class="project-name">chiphat.emoticons</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+  (let [resp @response]
+    (cond
+      ;; Unwrap the response from all the header hooplah.
+      (some? (:body resp))
+        (-&gt; resp
+            :body
+            json/parse-string
+            keywordize-keys)
+      ;; Return an empty map for responses that are successful but have no
+      ;; body.
+      (some? (#{204} (:status @response)))
+        {}
+      ;; Keep this error map consistent with what is returned from the
+      ;; HipChat API.
+      (some?  (:error resp))
+        {:error  {:code 422 ; Closest matching HTTP we can return.
+                  :message  (str  (:error resp))
+                  :type  &quot;ClientError&quot;}})))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#chiphat.emoticons" name="chiphat.emoticons"><h1 class="project-name">chiphat.emoticons</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns chiphat.emoticons
   (:require [chiphat.core :refer :all]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def base-endpoint

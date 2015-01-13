@@ -13,6 +13,7 @@ This README is updated with the implementation of each new endpoint!
 Also on the list of planned features:
 
 * Rate-limit detection and handling
+* Title expansion where supported in the HipChat api.
 
 ## Usage
 
@@ -104,15 +105,10 @@ function is provided to get a map of the response.
 ```
 
 ## Tests
+
 Tests are implemented project-wide with the [clojure.test][test] runner and can
-be run from the command-line like so:
-
-```
-CHIPHAT_API_TOKEN=your-token-here lein test
-```
-
-Note that you will need to provide your api token for some tests to run
-properly. **This will be amended in future releases.**
+be run with `lein test` (or from the REPL with something like
+`(clojure.test/run-tests 'chiphat.core-test)`)
 
 ## Contributing
 
@@ -135,7 +131,7 @@ first updating the relevant tests!**
 
 ## License
 
-Copyright © 2014 Fernando Freire
+Copyright © 2014-2015 Fernando Freire
 
 Distributed under the BSD-3 License.
 
