@@ -6,7 +6,7 @@ A Clojure library for accessing the HipChat v2 API.
 This README is updated with the implementation of each new endpoint!
 
 * Emoticons **2/2**
-* Rooms **7/24**
+* Rooms **13/24**
 * Users **1/13**
 * OAuth Sessions **0/3**
 
