@@ -56,7 +56,7 @@
     (with-fake-http [{:url "https://api.hipchat.com/v2/room/test-room"
                      :method :delete}
                      {:status 204
-                      :body nil}]
+                      :body ""}]
       (let [response-map (parse-response
                            (make-request :delete "room/test-room"))]
         (is (map? response-map))

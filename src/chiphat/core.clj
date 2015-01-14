@@ -40,7 +40,7 @@
   (let [resp @response]
     (cond
       ;; Unwrap the response from all the header hooplah.
-      (some? (:body resp))
+      (not-empty (:body resp))
         (-> resp
             :body
             json/parse-string
