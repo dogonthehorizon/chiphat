@@ -69,6 +69,14 @@
     (str base-endpoint "/" (url-encode name-or-id) "/invite/" (url-encode email-or-id))
     (:body {:reason reason})))
 
+(defn add-member
+  "Adds a member to a private room."
+  [name-or-id email-or-id]
+  (make-request
+    :put
+    (str base-endpoint  "/"  (url-encode name-or-id)
+                        "/member/"  (url-encode email-or-id))))
+
 (defn send-notification
   "Send a message to a room."
   [name-or-id message & [{:keys [color notify message_format] :as opts}]]
