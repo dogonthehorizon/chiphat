@@ -53,6 +53,14 @@
     (str base-endpoint "/" (url-encode name-or-id) "/history")
     {:query opts}))
 
+(defn get-message
+  "Fetch one specific message by id."
+  [name-or-id message-id & [{:keys [timezone]}]]
+  (make-request
+    :get
+    (str base-endpoint "/" (url-encode name-or-id) "/history/" message-id)
+    {:query {:timezone timezone}}))
+
 (defn send-notification
   "Send a message to a room."
   [name-or-id message & [{:keys [color notify message_format] :as opts}]]
