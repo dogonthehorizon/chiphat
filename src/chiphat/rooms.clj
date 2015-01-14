@@ -37,12 +37,21 @@
       (str base-endpoint "/" (url-encode name-or-id))
       {:body options})))
 
-(defn recent-room-history
+(defn recent-history
   "Fetch the latest chat history for this room."
   [name-or-id & [{:keys [max-results timezone not-before] :as opts}]]
   (make-request :get
                 (str base-endpoint "/" (url-encode name-or-id) "/history/latest")
                 {:body opts}))
+
+(defn history
+  "Fetch chat room history for this room."
+  [name-or-id &
+   [{:keys [date timezone start-index max-results reverse] :as opts}]]
+  (make-request
+    :get
+    (str base-endpoint "/" (url-encode name-or-id) "/history")
+    {:query opts}))
 
 (defn send-notification
   "Send a message to a room."
