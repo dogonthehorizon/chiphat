@@ -61,6 +61,14 @@
     (str base-endpoint "/" (url-encode name-or-id) "/history/" message-id)
     {:query {:timezone timezone}}))
 
+(defn invite-user
+  "Invite user to a public room."
+  [name-or-id email-or-id & [[reason]]]
+  (make-request
+    :post
+    (str base-endpoint "/" (url-encode name-or-id) "/invite/" (url-encode email-or-id))
+    (:body {:reason reason})))
+
 (defn send-notification
   "Send a message to a room."
   [name-or-id message & [{:keys [color notify message_format] :as opts}]]
