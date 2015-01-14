@@ -7,4 +7,6 @@
                  [http-kit            "2.1.19"]
                  [cheshire            "5.4.0"]]
   :plugins [[lein-marginalia "0.8.0"]]
-  :profiles {:dev {:dependencies [[http-kit.fake "0.2.2"]]}})
+  :profiles {:dev {:dependencies [[http-kit.fake "0.2.2"]
+                                  [org.clojure/tools.namespace  "0.2.8"]]
+                   :source-paths ["dev/"]}})
