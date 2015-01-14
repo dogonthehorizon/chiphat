@@ -27,6 +27,16 @@
   [name-or-id]
   (make-request :delete (str base-endpoint "/" (url-encode name-or-id))))
 
+(defn update
+  "Updates a room."
+  [name-or-id
+   {:keys [privacy is_archived is_guest_accessible topic owner] :as opts}]
+  (let [options (assoc opts :name name-or-id)]
+    (make-request
+      :put
+      (str base-endpoint "/" (url-encode name-or-id))
+      {:body options})))
+
 (defn recent-room-history
   "Fetch the latest chat history for this room."
   [name-or-id & [{:keys [max-results timezone not-before] :as opts}]]
