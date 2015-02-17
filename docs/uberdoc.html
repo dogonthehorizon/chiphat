@@ -2865,7 +2865,7 @@ net.brehaut.ClojureTools = (function (SH) {
     build_tree: build_tree
   };
 })(SyntaxHighlighter);
-</script><title>chiphat -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name"><a href="https://github.com/dogonthehorizon/chiphat">chiphat</a></h1><h2 class="project-version">0.3.0</h2><br /><p>Clojure library for accessing the HipChat v2 API.</p>
+</script><title>chiphat -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name"><a href="https://github.com/dogonthehorizon/chiphat">chiphat</a></h1><h2 class="project-version">0.5.0</h2><br /><p>Clojure library for accessing the HipChat v2 API.</p>
 </div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.7.0-alpha5</td></tr><tr><td class="dep-name">http-kit</td><td class="dotted"><hr /></td><td class="dep-version">2.1.19</td></tr><tr><td class="dep-name">cheshire</td><td class="dotted"><hr /></td><td class="dep-version">5.4.0</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#chiphat.core">chiphat.core</a></li><li><a href="#chiphat.emoticons">chiphat.emoticons</a></li><li><a href="#chiphat.rooms">chiphat.rooms</a></li><li><a href="#chiphat.users">chiphat.users</a></li><li><a href="#chiphat.util">chiphat.util</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#chiphat.core" name="chiphat.core"><h1 class="project-name">chiphat.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns chiphat.core
   (:require [org.httpkit.client :as http]
@@ -2898,7 +2898,7 @@ net.brehaut.ClojureTools = (function (SH) {
   (let [resp @response]
     (cond
       ;; Unwrap the response from all the header hooplah.
-      (some? (:body resp))
+      (not-empty (:body resp))
         (-&gt; resp
             :body
             json/parse-string
@@ -2941,18 +2941,67 @@ net.brehaut.ClojureTools = (function (SH) {
     (make-request :post base-endpoint {:body body})))</pre></td></tr><tr><td class="docs"><p>Delete an existing room.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn delete
   [name-or-id]
-  (make-request :delete (str base-endpoint &quot;/&quot; (url-encode name-or-id))))</pre></td></tr><tr><td class="docs"><p>Fetch the latest chat history for this room.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn recent-room-history
+  (make-request :delete (str base-endpoint &quot;/&quot; (url-encode name-or-id))))</pre></td></tr><tr><td class="docs"><p>Updates a room.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn update
+  [name-or-id
+   {:keys [privacy is_archived is_guest_accessible topic owner] :as opts}]
+  (let [options (assoc opts :name name-or-id)]
+    (make-request
+      :put
+      (str base-endpoint &quot;/&quot; (url-encode name-or-id))
+      {:body options})))</pre></td></tr><tr><td class="docs"><p>Fetch the latest chat history for this room.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn recent-history
   [name-or-id &amp; [{:keys [max-results timezone not-before] :as opts}]]
   (make-request :get
                 (str base-endpoint &quot;/&quot; (url-encode name-or-id) &quot;/history/latest&quot;)
-                {:body opts}))</pre></td></tr><tr><td class="docs"><p>Send a message to a room.</p>
+                {:body opts}))</pre></td></tr><tr><td class="docs"><p>Fetch chat room history for this room.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn history
+  [name-or-id &amp;
+   [{:keys [date timezone start-index max-results reverse] :as opts}]]
+  (make-request
+    :get
+    (str base-endpoint &quot;/&quot; (url-encode name-or-id) &quot;/history&quot;)
+    {:query opts}))</pre></td></tr><tr><td class="docs"><p>Fetch one specific message by id.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn get-message
+  [name-or-id message-id &amp; [{:keys [timezone]}]]
+  (make-request
+    :get
+    (str base-endpoint &quot;/&quot; (url-encode name-or-id) &quot;/history/&quot; message-id)
+    {:query {:timezone timezone}}))</pre></td></tr><tr><td class="docs"><p>Invite user to a public room.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn invite-user
+  [name-or-id email-or-id &amp; [[reason]]]
+  (make-request
+    :post
+    (str base-endpoint &quot;/&quot; (url-encode name-or-id) &quot;/invite/&quot; (url-encode email-or-id))
+    (:body {:reason reason})))</pre></td></tr><tr><td class="docs"><p>Adds a member to a private room.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn add-member
+  [name-or-id email-or-id]
+  (make-request
+    :put
+    (str base-endpoint  &quot;/&quot;  (url-encode name-or-id)
+                        &quot;/member/&quot;  (url-encode email-or-id))))</pre></td></tr><tr><td class="docs"><p>Removes a member from a private room.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn remove-member
+  [username-or-id roomname-or-id]
+  (make-request
+    :delete
+    (str base-endpoint &quot;/&quot; (url-encode roomname-or-id)
+                       &quot;/member/&quot; (url-encode username-or-id))))</pre></td></tr><tr><td class="docs"><p>Gets all members for this private room.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn get-all-members
+  [name-or-id &amp; [{:keys [start-index max-results] :as options}]]
+  (make-request :get (str base-endpoint &quot;/&quot; (url-encode name-or-id) &quot;/member&quot;)
+                {:query options}))</pre></td></tr><tr><td class="docs"><p>Gets all participants in this room.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn get-all-participants
+  [name-or-id &amp; [{:keys [start-index include-offline max-results] :as options}]]
+  (make-request :get (str base-endpoint &quot;/&quot; (url-encode name-or-id) &quot;/participant&quot;)
+                {:query options}))</pre></td></tr><tr><td class="docs"><p>Send a message to a room.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn send-notification
   [name-or-id message &amp; [{:keys [color notify message_format] :as opts}]]
   (let [body (assoc opts :message message)]
     (make-request :post
                   (str base-endpoint &quot;/&quot; (url-encode name-or-id) &quot;/notification&quot;)
-                  {:body body})))</pre></td></tr><tr><td class="docs"><p>Send a reply to a room.</p>
+                  {:body body})))</pre></td></tr><tr><td class="docs"><p>Proxy for send-notification.</p>
+</td><td class="codes"><pre class="brush: clojure">(def send-message
+  send-notification)</pre></td></tr><tr><td class="docs"><p>Send a reply to a room.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn send-reply
   [name-or-id parent-message-id message]
   (make-request :post

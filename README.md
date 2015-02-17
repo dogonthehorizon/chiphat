@@ -6,7 +6,7 @@ A Clojure library for accessing the HipChat v2 API.
 This README is updated with the implementation of each new endpoint!
 
 * Emoticons **2/2**
-* Rooms **13/24**
+* Rooms **17/24**
 * Users **1/13**
 * OAuth Sessions **0/3**
 
@@ -35,11 +35,11 @@ Alternatively, you can require chiphat from the REPL like so:
 
 ### Authentication
 
-HipChat uses a token based authentication approach for their api. Before
-attempting to use this library please make sure you have your api token (You
-can get one by [going here][token]).
+HipChat uses token based authentication for their api. Before attempting to use
+this library please make sure you have your api token (you can get one by
+[going here][token]).
 
-With your api token in hand, you may authenticate all future requests by
+With your api token in hand, you may now authenticate all future requests by
 calling `set-token!` in the main namespace of your application.
 
 ```clojure
@@ -63,8 +63,6 @@ so with the `with-token` macro.
 ### Interacting with the HipChat API
 
 #### Simple requests
-Once authenticated, you can make requests to HipChat by calling the appropriate
-method for your needs.
 
 Required parameters for a request are passed in to each function in order. Say
 for example you wanted to create a room, you would pass in the room name
@@ -106,9 +104,9 @@ function is provided to get a map of the response.
 
 ## Tests
 
-Tests are implemented project-wide with the [clojure.test][test] runner and can
-be run with `lein test` (or from the REPL with something like
-`(clojure.test/run-tests 'chiphat.core-test)`)
+Tests are implemented with the [clojure.test][test] runner and can be run with
+`lein test` (or from the REPL with something like `(clojure.test/run-tests
+'chiphat.core-test)`)
 
 ## Contributing
 
