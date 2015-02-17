@@ -84,6 +84,12 @@
     :delete
     (str base-endpoint "/" (url-encode roomname-or-id)
                        "/member/" (url-encode username-or-id))))
+
+(defn get-all-members
+  "Gets all members for this private room."
+  [name-or-id & [{:keys [start-index max-results]}]]
+  (make-request :get (str base-endpoint "/" (url-encode name-or-id) "/member")))
+
 (defn send-notification
   "Send a message to a room."
   [name-or-id message & [{:keys [color notify message_format] :as opts}]]
@@ -91,6 +97,10 @@
     (make-request :post
                   (str base-endpoint "/" (url-encode name-or-id) "/notification")
                   {:body body})))
+
+(def send-message
+  "Proxy for send-notification."
+  send-notification)
 
 (defn send-reply
   "Send a reply to a room."
