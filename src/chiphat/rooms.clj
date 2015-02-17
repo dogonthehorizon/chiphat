@@ -87,8 +87,15 @@
 
 (defn get-all-members
   "Gets all members for this private room."
-  [name-or-id & [{:keys [start-index max-results]}]]
-  (make-request :get (str base-endpoint "/" (url-encode name-or-id) "/member")))
+  [name-or-id & [{:keys [start-index max-results] :as options}]]
+  (make-request :get (str base-endpoint "/" (url-encode name-or-id) "/member")
+                {:query options}))
+
+(defn get-all-participants
+  "Gets all participants in this room."
+  [name-or-id & [{:keys [start-index include-offline max-results] :as options}]]
+  (make-request :get (str base-endpoint "/" (url-encode name-or-id) "/participant")
+                {:query options}))
 
 (defn send-notification
   "Send a message to a room."
