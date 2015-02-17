@@ -77,6 +77,13 @@
     (str base-endpoint  "/"  (url-encode name-or-id)
                         "/member/"  (url-encode email-or-id))))
 
+(defn remove-member
+  "Removes a member from a private room."
+  [username-or-id roomname-or-id]
+  (make-request
+    :delete
+    (str base-endpoint "/" (url-encode roomname-or-id)
+                       "/member/" (url-encode username-or-id))))
 (defn send-notification
   "Send a message to a room."
   [name-or-id message & [{:keys [color notify message_format] :as opts}]]
