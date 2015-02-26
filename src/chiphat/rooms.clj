@@ -124,3 +124,12 @@
                 (str base-endpoint "/" (url-encode name-or-id) "/share/link")
                 {:body {:link link
                         :message message}}))
+
+(defn share-file
+  "Share a file with the room."
+  [name-or-id file & [message]]
+  (make-request :post
+                (str base-endpoint "/" (url-encode name-or-id) "/share/file")
+                {:body {:message message}
+                 :multi-part [{:name "file" :content file :filename (.getName file)}]
+                 :headers {"Content-Type" "multipart/related"}}))
